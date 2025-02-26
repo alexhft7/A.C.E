@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Engine</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            text-align: center;
+        }
+        .search-box {
+            width: 80%;
+            max-width: 500px;
+            padding: 10px;
+            margin: 20px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .search-button, .voice-button, .dark-mode-button {
+            padding: 10px 20px;
+            margin: 5px;
+            background-color: #0073e6;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .search-button:hover, .voice-button:hover, .dark-mode-button:hover {
+            background-color: #005bb5;
+        }
+        .suggestion-box {
+            width: 80%;
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: none;
+        }
+        .suggestion-box div {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .suggestion-box div:hover {
+            background-color: #f4f4f4;
+        }
+        .filter-container {
+            margin: 20px 0;
+        }
+        body.dark-mode {
+            background-color: #121212;
+            color: white;
+        }
+        .search-box.dark-mode, .suggestion-box.dark-mode {
+            background-color: #333;
+            color: white;
+        }
+        .search-button.dark-mode, .voice-button.dark-mode, .dark-mode-button.dark-mode {
+            background-color: #bb86fc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>A.C.E</h1>
+        <script async src="https://cse.google.com/cse.js?cx=4025b695112a64665">
+        </script>
+        <div class="gcse-searchbox"></div>
+        <div class="gcse-searchresults"></div>
+        <button class="voice-button">🎤</button>
+        <button class="dark-mode-button">Toggle Dark Mode</button>
+        <div class="suggestion-box"></div>
+        <div class="filter-container">
+            <label for="date-filter">Date:</label>
+            <input type="date" id="date-filter">
+            <label for="type-filter">Type:</label>
+            <select id="type-filter">
+                <option value="all">All</option>
+                <option value="articles">Articles</option>
+                <option value="images">Images</option>
+            </select>
+        </div>
+    </div>
+    <script>
+        document.querySelector('.search-button').addEventListener('click', function() {
+            const query = document.querySelector('.search-box').value;
+            const dateFilter = document.querySelector('#date-filter').value;
+            const typeFilter = document.querySelector('#type-filter').value;
+            if(query) {
+                console.log('Searching for: ' + query + ', Date: ' + dateFilter + ', Type: ' + typeFilter);
+                // Handle the search with the selected filters
+            } else {
+                alert('Please enter a search query!');
+            }
+        });
+
+        const suggestions = ['example1', 'example2', 'example3']; // Add your suggestions here
+
+        document.querySelector('.search-box').addEventListener('input', function() {
+            const input = this.value.toLowerCase();
+            const suggestionBox = document.querySelector('.suggestion-box');
+            suggestionBox.innerHTML = '';
+            if (input) {
+                const filteredSuggestions = suggestions.filter(suggestion => 
+                    suggestion.toLowerCase().startsWith(input)
+                );
+                filteredSuggestions.forEach(suggestion => {
+                    const suggestionItem = document.createElement('div');
+                    suggestionItem.textContent = suggestion;
+                    suggestionItem.addEventListener('click', function() {
+                        document.querySelector('.search-box').value = suggestion;
+                        suggestionBox.innerHTML = '';
+                    });
+                    suggestionBox.appendChild(suggestionItem);
+                });
+                suggestionBox.style.display = 'block';
+            } else {
+                suggestionBox.style.display = 'none';
+            }
+        });
+
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.interimResults = true;
+
+        document.querySelector('.voice-button').addEventListener('click', function() {
+            recognition.start();
+        });
+
+        recognition.addEventListener('result', function(event) {
+            const transcript = Array.from(event.results)
+                .map(result => result[0])
+                .map(result => result.transcript)
+                .join('');
+            document.querySelector('.search-box').value = transcript;
+        });
+
+        document.querySelector('.dark-mode-button').addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            document.querySelector('.search-box').classList.toggle('dark-mode');
+            document.querySelector('.search-button').classList.toggle('dark-mode');
+            document.querySelector('.voice-button').classList.toggle('dark-mode');
+            document.querySelector('.dark-mode-button').classList.toggle('dark-mode');
+            document.querySelector('.suggestion-box').classList.toggle('dark-mode');
+        });
+    </script>
+</body>
+</html>
