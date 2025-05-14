@@ -79,7 +79,6 @@
         <div class="gcse-searchbox"></div>
         <div class="gcse-searchresults"></div>
         <button class="voice-button">🎤</button>
-        <button class="dark-mode-button">Toggle Dark Mode</button>
         <div class="suggestion-box"></div>
         <div class="filter-container">
             <label for="date-filter">Date:</label>
@@ -104,9 +103,6 @@
                 alert('Please enter a search query!');
             }
         });
-
-        const suggestions = ['example1', 'example2', 'example3']; // Add your suggestions here
-
         document.querySelector('.search-box').addEventListener('input', function() {
             const input = this.value.toLowerCase();
             const suggestionBox = document.querySelector('.suggestion-box');
